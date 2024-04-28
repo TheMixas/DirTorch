@@ -59,6 +59,7 @@ fn help(p0: CLIActionParams) -> bool {
         match commands.get(command){
             Some(command) => {
                 println!("{}", command.help_extended());
+                println!()
             },
             None => {
                 println!("Command not found");
@@ -66,11 +67,19 @@ fn help(p0: CLIActionParams) -> bool {
         }
         return true;
     }
-    let commands : &HashMap<String,Box<dyn Command + Send + Sync>> = command_executor::EXECUTOR.get_commands();
+    let commands: &HashMap<String, Box<dyn Command + Send + Sync>> = command_executor::EXECUTOR.get_commands();
+
+    // Sort the commands alphabetically
+    let mut sorted_commands: Vec<_> = commands.iter().collect();
+    sorted_commands.sort_by(|a, b| a.0.cmp(b.0));
+
     let mut writer = BufWriter::new(std::io::stdout());
-    for (key, value) in commands.iter() {
-        writer.write_all(format!("{}\n", value.help()).as_bytes()).unwrap();
+
+    for (key, value) in sorted_commands.iter() {
+        // Add some padding or indentation to the output
+        writer.write_all(format!("Command: {:<20} Description: {}\n", key, value.help()).as_bytes()).unwrap();
     }
+
     writer.flush().unwrap();
     true
 }

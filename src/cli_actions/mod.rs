@@ -1,7 +1,7 @@
 pub mod create_dir;
 pub mod copy_file;
 mod list_dirs;
-pub mod view_file;
+pub mod read_file;
 pub mod concat_file;
 pub mod view_history;
 pub mod undo_command;

@@ -1,5 +1,5 @@
 use std::collections::HashMap;
-use crate::cli_actions::{create_dir, copy_file, view_file, concat_file, view_history, undo_command, change_directory, list_files, file_weight, create_file};
+use crate::cli_actions::{create_dir, copy_file, read_file, concat_file, view_history, undo_command, change_directory, list_files, file_weight, create_file};
 use crate::cli_action_params::CLIActionParams;
 use crate::cli_actions::help_actions::help;
 use crate::command::Command;

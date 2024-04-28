@@ -10,6 +10,8 @@ use std::sync::{Arc, Mutex};
 use std::{fs, thread};
 use std::thread::JoinHandle;
 use rayon::prelude::*;
+use crate::helper_functions::fix_path::fix_path;
+
 pub struct CopyFileCommand;
 
 impl Debug for CopyFileCommand {
@@ -118,8 +120,8 @@ fn copy_file_multi_threaded_recursive(p0: CLIActionParams) -> bool {
 
     let source_path: PathBuf = match p0.parameters.get(0) {
         Some(value) => {
-            println!("Source path: {}", value);
-            PathBuf::from(value)
+            // println!("Source path: {}", value);
+            fix_path(value)
         },
         None => {
             println!("No source provided, not copying file");
@@ -128,8 +130,8 @@ fn copy_file_multi_threaded_recursive(p0: CLIActionParams) -> bool {
     };
     let destination_path: PathBuf = match p0.parameters.get(1) {
         Some(value) => {
-            println!("Destination path: {}", value);
-            PathBuf::from(value)
+            // println!("Destination path: {}", value);
+            fix_path(value)
         },
         None => {
             println!("No destination provided, not copying file");
@@ -141,7 +143,7 @@ fn copy_file_multi_threaded_recursive(p0: CLIActionParams) -> bool {
         return false;
     }
     if !source_path.exists() {
-        println!("Source path does not exist");
+        println!("Source path does not exist, path: {}", source_path.display());
         return false;
     }
     if destination_path.exists() {
@@ -156,6 +158,7 @@ fn copy_file_multi_threaded_recursive(p0: CLIActionParams) -> bool {
     }
     copy_directory(&source_path, &destination_path);
 
+    println!("Copied directory successfully");
     true
 }
 fn copy_directory(source: &Path, destination: &Path) {

@@ -39,9 +39,10 @@ impl Command for FileSearchCommand {
     }
 
     fn help_extended(&self) -> &str {
-        "search: searches for a file in the current directory
-        \n\tUsage: search <file>
-        \n\tExample: search file.txt"
+        "search: searches for file/s in the current directory
+        \n\tUsage: search <file_name> -d <directory> -m // -m for multiple files
+        \n\tExample multiple file search: search Idle.png -d C:\\Users\\themi\\Downloads\\ -m
+        \n\tExample single file search: search Idle.png -d C:\\Users\\themi\\Downloads\\"
     }
 
     fn should_add_to_history(&self) -> bool {
@@ -137,7 +138,7 @@ fn search_file_threaded(p0: CLIActionParams) -> bool {
     let dir = parsed_flags.directory.as_str();
     let dir = fix_path(dir);
     return if(parsed_flags.single_file == true){
-        println!("searching single file");
+        // println!("searching single file");
         search_single_file_in_dir_threaded(&dir, file_name)
     }else{
         println!("searching multiple files");

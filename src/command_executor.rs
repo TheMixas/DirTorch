@@ -2,7 +2,7 @@ use std::collections::HashMap;
 use std::fmt::Debug;
 use lazy_static::lazy_static;
 use crate::cli_action_params::CLIActionParams;
-use crate::cli_actions::{change_directory, compress, concat_file, copy_file, create_dir, create_file, decompress, file_weight, get_file_checksum, get_file_metadata, list_files, search_file, undo_command, view_history, exit};
+use crate::cli_actions::{change_directory, compress, concat_file, copy_file, create_dir, create_file, decompress, file_weight, get_file_checksum, get_file_metadata, list_files, search_file, undo_command, view_history, exit, read_file};
 use crate::cli_actions::help_actions::help;
 use crate::command;
 use crate::command::Command;
@@ -26,7 +26,7 @@ pub fn new() -> CommandExecutor {
     commands.insert("ls".to_string(), Box::new(list_files::ListFilesCommand));
     commands.insert("weigh".to_string(), Box::new(file_weight::FileWeightCommand));
     // commands.insert("copy".to_string(), copy_file::copy_file);
-    // commands.insert("read".to_string(), view_file::view_file);
+    commands.insert("read".to_string(), Box::new(read_file::ReadFileCommand));
     commands.insert("concat".to_string(), Box::new(concat_file::ConcatFileCommand));
     commands.insert("touch".to_string(), Box::new(create_file::CreateFileCommand));
     commands.insert("copy".to_string(), Box::new(copy_file::CopyFileCommand));
@@ -57,7 +57,9 @@ pub fn new() -> CommandExecutor {
             return false;
         }
         let command = command.unwrap();
-        command.execute(action_params)
+        let success = command.execute(action_params);
+        println!("---------------------------------");
+        success
     }
 
     pub fn get_commands(&self) -> &HashMap<String,Box<dyn Command + Send + Sync>> {
